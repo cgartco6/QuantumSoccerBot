@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FootPredict AI - Advanced Soccer Prediction Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a5fb4;
+            --secondary: #c64600;
+            --accent: #26a269;
+            --light: #f6f5f4;
+            --dark: #241f31;
+            --success: #2ec27e;
+            --warning: #e5a50a;
+            --danger: #c01c28;
+            --gray: #deddda;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f0f0;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), #0d4a93);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a:hover {
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 1.5rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-group h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .date-filter {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .date-navigation {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0d4a93;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .current-date {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        select {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .prediction-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .prediction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .match-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .league {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .match-time {
+            font-weight: 600;
+        }
+        
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 1rem;
+            align-items: center;
+        }
+        
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        
+        .team-name {
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--dark);
+            border: 2px solid var(--gray);
+        }
+        
+        .vs {
+            font-weight: 700;
+            color: #888;
+        }
+        
+        .prediction-details {
+            padding: 0 1rem 1rem;
+        }
+        
+        .prediction-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ai-badge {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .factors {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .factor {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .factor:last-child {
+            margin-bottom: 0;
+        }
+        
+        .factor-name {
+            color: #666;
+        }
+        
+        .factor-value {
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .neutral {
+            color: var(--warning);
+        }
+        
+        .prediction-result {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f0f7ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            align-items: center;
+        }
+        
+        .result-type {
+            font-weight: 600;
+        }
+        
+        .confidence {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .confidence-level {
+            height: 8px;
+            width: 100px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .high-confidence {
+            background-color: var(--success);
+            width: 85%;
+        }
+        
+        .medium-confidence {
+            background-color: var(--warning);
+            width: 65%;
+        }
+        
+        .low-confidence {
+            background-color: var(--danger);
+            width: 45%;
+        }
+        
+        .odds-comparison {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .odds-provider {
+            text-align: center;
+        }
+        
+        .provider-name {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+        
+        .odds-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .value-bet {
+            color: var(--success);
+        }
+        
+        .ai-insights {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .ai-insights h2 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .insight-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .insight-card {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .insight-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .insight-card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .disclaimer {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        @media (max-width: 968px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .date-filter {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .predictions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-futbol"></i></div>
+                <h1>FootPredict AI</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-table"></i> Predictions</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Statistics</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="sidebar">
+                <h2><i class="fas fa-filter"></i> Filters</h2>
+                
+                <div class="filter-group">
+                    <h3>Leagues</h3>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="premier-league" checked>
+                            <label for="premier-league">Premier League</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="la-liga" checked>
+                            <label for="la-liga">La Liga</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="serie-a" checked>
+                            <label for="serie-a">Serie A</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="bundesliga" checked>
+                            <label for="bundesliga">Bundesliga</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="ligue-1">
+                            <label for="ligue-1">Ligue 1</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Prediction Types</h3>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="btts" checked>
+                            <label for="btts">BTTS</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="win-predictions" checked>
+                            <label for="win-predictions">Win Predictions</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="over-under" checked>
+                            <label for="over-under">Over/Under</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cards">
+                            <label for="cards">Card Predictions</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Confidence Level</h3>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="high-confidence" checked>
+                            <label for="high-confidence">High (>75%)</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="medium-confidence" checked>
+                            <label for="medium-confidence">Medium (60-75%)</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="low-confidence">
+                            <label for="low-confidence">Low (<60%)</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-sync-alt"></i> Apply Filters
+                </button>
+            </div>
+            
+            <div class="main-content">
+                <div class="date-filter">
+                    <div class="date-navigation">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-chevron-left"></i> Yesterday
+                        </button>
+                        <div class="current-date">Today, October 15, 2023</div>
+                        <button class="btn btn-outline">
+                            Tomorrow <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="filters">
+                        <select>
+                            <option>All Leagues</option>
+                            <option>Premier League</option>
+                            <option>La Liga</option>
+                            <option>Serie A</option>
+                            <option>Bundesliga</option>
+                            <option>Ligue 1</option>
+                        </select>
+                        <select>
+                            <option>All Match Types</option>
+                            <option>BTTS</option>
+                            <option>Over/Under</option>
+                            <option>Win Predictions</option>
+                        </select>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-filter"></i> Apply
+                        </button>
+                    </div>
+                </div>
+
+                <div class="predictions-grid">
+                    <!-- Match Prediction 1 -->
+                    <div class="prediction-card">
+                        <div class="match-header">
+                            <div class="league">
+                                <i class="fas fa-trophy"></i> Premier League
+                            </div>
+                            <div class="match-time">19:45 GMT</div>
+                        </div>
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">ARS</div>
+                                <div class="team-name">Arsenal</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">MCI</div>
+                                <div class="team-name">Man City</div>
+                            </div>
+                        </div>
+                        <div class="prediction-details">
+                            <div class="prediction-header">
+                                <span>AI Prediction</span>
+                                <span class="ai-badge">87% ACCURACY</span>
+                            </div>
+                            <div class="factors">
+                                <div class="factor">
+                                    <span class="factor-name">Form</span>
+                                    <span class="factor-value positive">Arsenal (WWLWW) vs Man City (WLWWW)</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Injuries</span>
+                                    <span class="factor-value negative">Man City: 3 key players</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">BTTS</span>
+                                    <span class="factor-value positive">75% Probability</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Weather</span>
+                                    <span class="factor-value neutral">Clear, 12°C</span>
+                                </div>
+                            </div>
+                            <div class="prediction-result">
+                                <div class="result-type">Both Teams to Score - YES</div>
+                                <div class="confidence">
+                                    <span>82%</span>
+                                    <div class="confidence-level">
+                                        <div class="confidence-fill high-confidence"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="odds-comparison">
+                                <div class="odds-provider">
+                                    <div class="provider-name">Hollywood Bets</div>
+                                    <div class="odds-value">1.85</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Betway</div>
+                                    <div class="odds-value">1.80</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Pinnacle</div>
+                                    <div class="odds-value value-bet">1.92</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match Prediction 2 -->
+                    <div class="prediction-card">
+                        <div class="match-header">
+                            <div class="league">
+                                <i class="fas fa-trophy"></i> La Liga
+                            </div>
+                            <div class="match-time">20:00 GMT</div>
+                        </div>
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">RMA</div>
+                                <div class="team-name">Real Madrid</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">BAR</div>
+                                <div class="team-name">Barcelona</div>
+                            </div>
+                        </div>
+                        <div class="prediction-details">
+                            <div class="prediction-header">
+                                <span>AI Prediction</span>
+                                <span class="ai-badge">79% ACCURACY</span>
+                            </div>
+                            <div class="factors">
+                                <div class="factor">
+                                    <span class="factor-name">Home Advantage</span>
+                                    <span class="factor-value positive">Real Madrid at Santiago Bernabéu</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Cards Prediction</span>
+                                    <span class="factor-value positive">Over 4.5 cards</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Recent Transfers</span>
+                                    <span class="factor-value neutral">Barcelona new striker adapting</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Referee Bias</span>
+                                    <span class="factor-value negative">Strict referee, high cards</span>
+                                </div>
+                            </div>
+                            <div class="prediction-result">
+                                <div class="result-type">Real Madrid Win</div>
+                                <div class="confidence">
+                                    <span>68%</span>
+                                    <div class="confidence-level">
+                                        <div class="confidence-fill medium-confidence"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="odds-comparison">
+                                <div class="odds-provider">
+                                    <div class="provider-name">Hollywood Bets</div>
+                                    <div class="odds-value">2.10</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Betway</div>
+                                    <div class="odds-value">2.15</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Pinnacle</div>
+                                    <div class="odds-value value-bet">2.25</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match Prediction 3 -->
+                    <div class="prediction-card">
+                        <div class="match-header">
+                            <div class="league">
+                                <i class="fas fa-trophy"></i> Serie A
+                            </div>
+                            <div class="match-time">17:30 GMT</div>
+                        </div>
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">JUV</div>
+                                <div class="team-name">Juventus</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">INT</div>
+                                <div class="team-name">Inter Milan</div>
+                            </div>
+                        </div>
+                        <div class="prediction-details">
+                            <div class="prediction-header">
+                                <span>AI Prediction</span>
+                                <span class="ai-badge">81% ACCURACY</span>
+                            </div>
+                            <div class="factors">
+                                <div class="factor">
+                                    <span class="factor-name">Defensive Strength</span>
+                                    <span class="factor-value positive">Both teams strong defense</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Injuries</span>
+                                    <span class="factor-value negative">Juventus: 2 defenders out</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Under/Over</span>
+                                    <span class="factor-value neutral">Under 2.5 goals likely</span>
+                                </div>
+                                <div class="factor">
+                                    <span class="factor-name">Pitch Condition</span>
+                                    <span class="factor-value positive">Excellent playing surface</span>
+                                </div>
+                            </div>
+                            <div class="prediction-result">
+                                <div class="result-type">Under 2.5 Goals</div>
+                                <div class="confidence">
+                                    <span>74%</span>
+                                    <div class="confidence-level">
+                                        <div class="confidence-fill high-confidence"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="odds-comparison">
+                                <div class="odds-provider">
+                                    <div class="provider-name">Hollywood Bets</div>
+                                    <div class="odds-value">1.75</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Betway</div>
+                                    <div class="odds-value">1.72</div>
+                                </div>
+                                <div class="odds-provider">
+                                    <div class="provider-name">Pinnacle</div>
+                                    <div class="odds-value value-bet">1.85</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-insights">
+                    <h2><i class="fas fa-brain"></i> AI Insights & Analysis</h2>
+                    <div class="insight-cards">
+                        <div class="insight-card">
+                            <h3>Top Value Bet</h3>
+                            <p>Based on our AI analysis, the highest value bet today is BTTS in Arsenal vs Man City with an expected value of 18%.</p>
+                        </div>
+                        <div class="insight-card">
+                            <h3>Biggest Mismatch</h3>
+                            <p>Real Madrid vs Barcelona shows the largest performance gap in midfield control (63% vs 37%).</p>
+                        </div>
+                        <div class="insight-card">
+                            <h3>Weather Impact</h3>
+                            <p>Clear conditions across all major matches today - minimal weather impact expected.</p>
+                        </div>
+                        <div class="insight-card">
+                            <h3>Injury Alert</h3>
+                            <p>Man City missing 3 key defenders increases likelihood of both teams scoring.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> Predictions are based on AI algorithms analyzing historical and current data. There is no guarantee of accuracy. Betting involves risk, and we encourage responsible gambling. Users must be of legal gambling age in their jurisdiction.
+            </div>
+            <div>© 2023 FootPredict AI. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to update the current date display
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('en-US', options);
+            document.querySelector('.current-date').textContent = formattedDate;
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+            
+            // Add click handlers for date navigation
+            document.querySelectorAll('.btn-outline').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const isTomorrow = this.textContent.includes('Tomorrow');
+                    alert(`Showing predictions for ${isTomorrow ? 'tomorrow' : 'yesterday'}`);
+                });
+            });
+            
+            // Add filter button handler
+            document.querySelectorAll('.btn-primary').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.textContent.includes('Apply')) {
+                        alert('Filters applied');
+                    }
+                });
+            });
+            
+            // Simulate AI processing
+            console.log('AI model initialized...');
+            console.log('Fetching latest player performance data...');
+            console.log('Analyzing team form and injuries...');
+            console.log('Calculating predictions with neural network...');
+            console.log('Predictions generated successfully!');
+        });
+    </script>
+</body>
+</html>
