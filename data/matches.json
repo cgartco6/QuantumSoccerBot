@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "league": "Premier League",
+        "time": "19:45 GMT",
+        "teamA": "Arsenal",
+        "teamB": "Man City",
+        "teamAShort": "ARS",
+        "teamBShort": "MCI",
+        "factors": {
+            "form": { "value": "Arsenal (WWLWW) vs Man City (WLWWW)", "impact": "positive" },
+            "injuries": { "value": "Man City: 3 key players", "impact": "negative" },
+            "btts": { "value": "75% Probability", "impact": "positive" },
+            "weather": { "value": "Clear, 12°C", "impact": "neutral" }
+        },
+        "prediction": { "type": "Both Teams to Score - YES", "confidence": 82 },
+        "odds": [
+            { "provider": "Hollywood Bets", "value": 1.85 },
+            { "provider": "Betway", "value": 1.80 },
+            { "provider": "Pinnacle", "value": 1.92, "valueBet": true }
+        ],
+        "aiAccuracy": 87
+    },
+    // More matches...
+]
